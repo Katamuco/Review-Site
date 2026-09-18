@@ -11,6 +11,12 @@
   gtag('config', 'G-474BF0NZNE');
 </script>
 
+<!-- Begin: Northbeam pixel -->
+<script>
+(function(){var t;(n=t=t||{}).A="identify",n.B="trackPageView",n.C="fireEmailCaptureEvent",n.D="fireCustomGoal",n.E="firePurchaseEvent",n.F="trackPageViewInitial",n.G="fireSlimPurchaseEvent",n.H="identifyCustomerId";var n="//j.northbeam.io/ota-sp/2d010559-228e-4c36-920c-8d6547a9ec7f.js";function r(n){for(var e=[],t=1;t<arguments.length;t++)e[t-1]=arguments[t];i.push({fnName:n,args:e})}var e,i=[],a=((e={})[t.F]=function(n){r(t.F,n)},(a={_q:i})[t.A]=function(n,e){return r(t.A,n,e)},a[t.B]=function(){return r(t.B)},a[t.C]=function(n,e){return r(t.C,n,e)},a[t.D]=function(n,e){return r(t.D,n,e)},a[t.E]=function(n){return r(t.E,n)},a[t.G]=function(n){return r(t.G,n)},a[t.H]=function(n,e){return r(t.H,n,e)},Object.assign(function(n){for(var e=[],t=1;t<arguments.length;t++)e.push(arguments[t]);return r.apply(null,[n].concat(e))},a));window.Northbeam=a,(a=document.createElement("script")).async=!0,a.src=n,document.head.appendChild(a),e.trackPageViewInitial(window.location.href);})()
+</script>
+<!-- End: Northbeam pixel -->
+
 <script src="https://cdn.tailwindcss.com"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Best Powerlifting Belts</title>
@@ -1211,6 +1217,71 @@ try {
 } catch (e) {
     // Silently catch any errors
 }
+</script>
+
+<!-- Northbeam nbt + gclid forwarding to katamu.co -->
+<script>
+(function () {
+  var TARGET_HOSTS = ["katamu.co", "www.katamu.co"];
+  var PARAMS = ["nbt", "gclid"];
+
+  function getParam(name) {
+    try {
+      var m = new RegExp("[?&]" + name + "=([^&#]*)").exec(location.search);
+      return m ? decodeURIComponent(m[1].replace(/\+/g, " ")) : "";
+    } catch (e) { return ""; }
+  }
+  function getCookie(name) {
+    var v = ("; " + document.cookie).split("; " + name + "=");
+    return v.length === 2 ? v.pop().split(";").shift() : "";
+  }
+
+  // Capture values: URL first, then sessionStorage, then cookie (gclid fallback)
+  var values = {};
+  PARAMS.forEach(function (p) {
+    var val = getParam(p);
+    if (!val) { try { val = sessionStorage.getItem("nb_" + p) || ""; } catch (e) {} }
+    if (!val && p === "gclid") { val = getCookie("gclid") || ""; }
+    if (val) {
+      values[p] = val;
+      try { sessionStorage.setItem("nb_" + p, val); } catch (e) {}
+    }
+  });
+  if (!Object.keys(values).length) return;
+
+  function isTarget(host) { return TARGET_HOSTS.indexOf(host) !== -1; }
+  function decorate(href) {
+    try {
+      var u = new URL(href, window.location.href);
+      if (!isTarget(u.hostname)) return href;
+      Object.keys(values).forEach(function (p) {
+        if (!u.searchParams.has(p)) u.searchParams.set(p, values[p]);
+      });
+      return u.toString();
+    } catch (e) { return href; }
+  }
+  function decorateAll() {
+    var links = document.getElementsByTagName("a");
+    for (var i = 0; i < links.length; i++) {
+      try {
+        var u = new URL(links[i].href, window.location.href);
+        if (isTarget(u.hostname)) links[i].href = decorate(links[i].href);
+      } catch (e) {}
+    }
+  }
+
+  decorateAll();
+  document.body.addEventListener("click", function (e) {
+    var a = e.target.closest("a");
+    if (!a) return;
+    try {
+      var u = new URL(a.href, window.location.href);
+      if (isTarget(u.hostname)) a.href = decorate(a.href);
+    } catch (e) {}
+  }, false);
+  var obs = new MutationObserver(function () { decorateAll(); });
+  obs.observe(document.body, { childList: true, subtree: true });
+})();
 </script>
 </body>
 </html>
